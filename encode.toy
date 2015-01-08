@@ -1,0 +1,80 @@
+program encode
+//Vamsi Jandhayala
+//javamsi
+//
+//November 7, 2012
+//
+//Objective: The purpose of this program is to encode a sequence of four bits 
+//with 3 additional parity bits which can be decoded to see if there was a 
+//change in any one of the original four bits which can be flipped if there was
+//an error.
+//
+//Input: javac TOY.java
+//java lfsr.toy < encode3.txt
+//
+//Output: 
+//0001
+//0001
+//0000
+//0001
+//0001
+//0000
+//0000
+//0001
+//0001
+//0001
+//0000
+//0000
+//0000
+//0000
+//0001
+//0001
+//0001
+//0001
+//0001
+//0001
+//0001
+//FFFF
+// -----------------------------------------------------------------------------
+//R[1] = constant 1
+//R[A] = m1 
+//R[B] = m2
+//R[C] = m3
+//R[D] = m4
+//R[3] - used to check for case of FFFF
+//R[7] = p1
+//R[8] = p2
+//R[9] = p3
+
+
+
+10: 7101   R[1] <- 0001                   // R[1] = 1               
+
+11: 8AFF   read R[A]                      // m1
+12: 13A1   R[3] <- R[A] + R[1]            // Checks the case of FFFF read in
+13: C325   if (R[3] == 0) goto 25         
+14: 8BFF   read R[B]                      // m2      
+15: 8CFF   read R[C]                      // m3        
+16: 8DFF   read R[D]                      // m4        
+
+17: 47AB   R[7] <- R[A] ^ R[B]            // p1 = m1 ^ m2 ^ m4
+18: 477D   R[7] <- R[7] ^ R[D]            
+
+19: 48AC   R[8] <- R[A] ^ R[C]            // p2 = m1 ^ m3 ^ m4
+1A: 488D   R[8] <- R[8] ^ R[D]            
+
+1B: 49BC   R[9] <- R[B] ^ R[C]            // p3 = m2 ^ m3 ^ m4
+1C: 499D   R[9] <- R[9] ^ R[D]            
+
+1D: 9AFF   write R[A]                     // write m1, m2, m3, m4, p1, p2, p3 to  
+1E: 9BFF   write R[B]                     StdOut
+1F: 9CFF   write R[C]                     
+20: 9DFF   write R[D]                     
+21: 97FF   write R[7]                     
+22: 98FF   write R[8]                     
+23: 99FF   write R[9]                     
+24: C011   goto 11                        
+
+25: 9AFF   write R[A]                     //write FFFF to StdOut
+26: 0000   halt                           
+                       

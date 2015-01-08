@@ -1,0 +1,14 @@
+if(x[j] % 2 != 0) {
+             x[j] = (x[j] - 1) /  (int) Math.pow(2,k);
+             System.out.println(x[j]);
+             y++;
+             System.out.println(y);
+             }
+             
+             if (x[j] % 2 == 0) {
+             System.out.println(x[j]);
+             y++; 
+             System.out.println(y);
+             x[j] = x[j]/(2*k);
+             System.out.println(x[j]);
+             }

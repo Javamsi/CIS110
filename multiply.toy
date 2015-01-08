@@ -1,0 +1,30 @@
+program Multiply
+// Input:    
+// Output:   
+// Remarks:  
+// -----------------------------------------------------------------------------
+
+//Register Map:
+//R[1] constant 1
+//R[A] first multiplicand
+//R[B] second multiplicand
+//R[C] product
+
+//Input multilicands
+00: 002A   (0000 0000 0010 1010,     42) 
+01: 0005   (0000 0000 0000 0101,      5)  
+
+10: 7101   R[1] <- 0001                  
+11: 8A00   R[A] <- mem[00]               //Load first input
+12: 8B01   R[B] <- mem[01]               //Load second input
+13: 7C00   R[C] <- 0000                  //product = 0
+14: 4CCC   R[C] <- R[C] ^ R[C]           //alternative for product - 0
+15: 1C00   no-op                         //another alternative 
+16: CB1A   if (R[B] == 0) goto 1A        XXXXXXX while (b! = 0) {
+17: 1CCA   R[C] <- R[C] + R[A]           //  product += a;
+18: 2BB1   R[B] <- R[B] - R[1]           //  b--;
+19: C016   goto 16                       //  go back to 16
+
+1A: 9C02   mem[02] <- R[C]               output product
+1B: 0000   halt                          
+

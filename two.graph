@@ -1,0 +1,15 @@
+2
+A
+B
+1 0
+-1 -1
+
+Benedict Brown
+University of Pennsylvania
+CIS 110 Fall 2012
+
+Test case with two vertices and one edge.
+
+Topological sort:
+
+B:A

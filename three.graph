@@ -1,0 +1,18 @@
+3
+A
+B
+C
+
+1 2
+2 0
+-1 -1
+
+Benedict Brown
+University of Pennsylvania
+CIS 110 Fall 2012
+
+Graph with three vertices and two edges
+
+Topological sort:
+
+B:C:A

@@ -1,0 +1,23 @@
+program Untitled2
+// Input:    
+// Output:   
+// Remarks:  
+// -----------------------------------------------------------------------------
+
+10: 8AFF   read R[A]                     
+11: 8BFF   read R[B]                     
+12: 9A02   mem[02] <- R[A]               
+13: 7D00   R[D] <- 0000                  
+
+
+14: DD1A   if (R[D] > 0) goto 1A          
+15: 2AAB   R[A] <- R[A] - R[B]              
+16: 9A01   mem[01] <- R[A]                
+17: 8D01   R[D] <- mem[01]                
+18: 2D0A   R[D] <- -R[A]                 
+19: C014   goto 14                        
+        
+             
+1A: 1CAB   R[C] <- R[A] + R[B]             
+1B: 9CFF   write R[C]                      
+1C: 0000   halt                            

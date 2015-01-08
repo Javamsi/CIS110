@@ -1,0 +1,111 @@
+program decode
+// Vamsi Jandhayala  
+// javamsi
+//
+// November 1, 2012
+//
+//Objective: The purpose of this program is to decode the encoded sequence of 7 
+//bits from the original 4 bits. It identifies an error in the sequence by 
+//checking the parity values and then fixes the error to return the original 
+//sequence of 4 bits. 
+//
+//Input: javac TOY.java
+//java lfsr.toy < decode3.txt
+//
+//Output: 
+//0001
+//0001
+//0000
+//0001
+//0001
+//0001
+//0001
+//0000
+//0001
+//0001
+//0001
+//0001
+//FFFF
+// -----------------------------------------------------------------------------
+//R[1] = constant value of 1
+//R[2] = p1 Read in and c1 + c2 + c3
+//R[3] = p2 Read in and c1 + c2
+//R[4] = p3 Read in and c1 + c3
+//R[5] = c2 (p2 Read in ^ p3 Actual)
+//R[6] = c3 (p3 Read in ^ p3 Actual)
+//R[7] = p1 Actual and Checks Condition FFFF
+//R[8] = p2 Actual
+//R[9] = p3 Actual
+//R[A] = m1
+//R[B] = m2
+//R[C] = m3
+//R[D] = m4
+//R[E] = c1 (p1 Read in ^ p1 Actual)
+//R[F] = c2 + c3
+
+10: 8AFF   read R[A]                     //m1
+11: 7101   R[1] <- 0001                  
+12: 17A1   R[7] <- R[A] + R[1]            
+13: C73C   if (R[7] == 0) goto 3C        //Check condition read in FFFF
+14: 8BFF   read R[B]                     //m2
+15: 8CFF   read R[C]                     //m3
+16: 8DFF   read R[D]                     //m4
+17: 82FF   read R[2]                     //p1 Read in
+18: 83FF   read R[3]                     //p2 Read in
+19: 84FF   read R[4]                     //p3 Read in                  
+
+1A: 47AB   R[7] <- R[A] ^ R[B]           //p1 Actual = m1 ^ m2 ^ m4
+1B: 477D   R[7] <- R[7] ^ R[D]             
+
+1C: 48AC   R[8] <- R[A] ^ R[C]           //p2 Actual = m1 ^ m3 ^ m4
+1D: 488D   R[8] <- R[8] ^ R[D]             
+
+1E: 49BC   R[9] <- R[B] ^ R[C]           //p3 Actual = m2 ^ m3 ^ m4
+1F: 499D   R[9] <- R[9] ^ R[D]             
+
+20: 4E27   R[E] <- R[2] ^ R[7]           //c1 = p1 Read in ^ p1 Actual
+21: 4538   R[5] <- R[3] ^ R[8]           //c2 = p2 Read in ^ p2 Actual
+22: 4649   R[6] <- R[4] ^ R[9]           //c3 = p3 Read in ^ p3 Actual
+     
+23: 12E5   R[2] <- R[E] + R[5]             
+24: 1226   R[2] <- R[2] + R[6]           // if(c1 + c2 + c3 == 3) 
+25: 7703   R[7] <- 0003                   m4 = m4 ^ 1    (Correct m4)
+26: 2727   R[7] <- R[2] - R[7]                   
+27: C73F   if (R[7] == 0) goto 3F           
+28: 2721   R[7] <- R[2] - R[1]           // Case where all bits are correct
+29: C737   if (R[7] == 0) goto 37        if(c1 + c2 + c3 == 1)
+2A: C237   if (R[2] == 0) goto 37        if(c1 + c2 + c3 == 0)
+            
+2B: 13E5   R[3] <- R[E] + R[5]            // if(c1 + c2  == 2)
+2C: 7702   R[7] <- 0002                    m1 = m1 ^ 1   (Correct m1)
+2D: 2737   R[7] <- R[3] - R[7]             
+2E: C741   if (R[7] == 0) goto 41             
+
+2F: 14E6   R[4] <- R[E] + R[6]            // if(c1 + c3 == 2)
+30: 7702   R[7] <- 0002                    m2 = m2 ^ 1   (Correct m2)
+31: 2747   R[7] <- R[4] - R[7]              
+32: C743   if (R[7] == 0) goto 43              
+        
+33: 1F56   R[F] <- R[5] + R[6]            // if(c2 + c3 == 2)
+34: 7702   R[7] <- 0002                    m3 = m3 ^ 1   (Correct m3)
+35: 27F7   R[7] <- R[F] - R[7]              
+36: C745   if (R[7] == 0) goto 45                  
+    
+37: 9AFF   write R[A]                    // Write the corrected bits to StdOut           
+38: 9BFF   write R[B]                                
+39: 9CFF   write R[C]                              
+3A: 9DFF   write R[D]                                                                 
+3B: C010   goto 10                       // loop            
+         
+3C: 2771   R[7] <- R[7] - R[1]            
+3D: 97FF   write R[7]                          
+3E: 0000   halt                              
+
+3F: 4DD1   R[D] <- R[D] ^ R[1]            // m4 = m4 ^ 1   (m4 corrected)    
+40: C037   goto 37                                
+41: 4AA1   R[A] <- R[A] ^ R[1]             // m1 = m1 ^ 1  (m1 corrected)      
+42: C037   goto 37                                 
+43: 4BB1   R[B] <- R[B] ^ R[1]            // m2 = m2 ^ 1   (m2 corrected)    
+44: C037   goto 37                                 
+45: 4CC1   R[C] <- R[C] ^ R[1]             // m3 = m3 ^ 1  (m3 corrected)    
+46: C037   goto 37                                                        
